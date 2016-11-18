@@ -1,6 +1,5 @@
 # pset3 
-
- * watch list
+### watch list
 
 * Diederick Calkoen 
   10684883 
