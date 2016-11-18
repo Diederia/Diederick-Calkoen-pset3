@@ -24,24 +24,22 @@ class ViewController: UIViewController {
     var info: Array<String> = []
     
     var currentIndex: Int?
-    var firstLaunch: Int? = 0
     
     let storage = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib. 
-        // MOET NOG EEN IF STATEMENT WANNEER EERSTE KEER GELADEN WORDT, DIT GAAT NOG FOUT...
-        if (titles.count > 0) {
-        titles = (self.storage.array(forKey: "Title") as! Array<String>)
-        years = (self.storage.array(forKey: "Year") as! Array<String>)
-        genres = (self.storage.array(forKey: "Genre") as! Array<String>)
-        actors = (self.storage.array(forKey: "Actors") as! Array<String>)
-        banners = (self.storage.array(forKey: "Poster") as! Array<String>)
-        info = (self.storage.array(forKey: "Plot") as! Array<String>)
+        
+        // Check if there is something in the storage.
+        if (self.storage.array(forKey: "Title") as? Array<String> != nil) {
+            titles = (self.storage.array(forKey: "Title") as! Array<String>)
+            years = (self.storage.array(forKey: "Year") as! Array<String>)
+            genres = (self.storage.array(forKey: "Genre") as! Array<String>)
+            actors = (self.storage.array(forKey: "Actors") as! Array<String>)
+            banners = (self.storage.array(forKey: "Poster") as! Array<String>)
+            info = (self.storage.array(forKey: "Plot") as! Array<String>)
         }
     }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -58,11 +56,11 @@ class ViewController: UIViewController {
             return
         }
         
-        // make url, also for titles of more than one word.
+        // make url, also for titles of more than one string.
         searchRequest = searchData.text!.replacingOccurrences(of: " ", with: "+" )
         
-        // http://www.learnswiftonline.com/mini-tutorials/how-to-download-and-read-json/
-        let requestURL: NSURL = NSURL(string: "https://www.omdbapi.com/?t=" + searchRequest! + "&y=&plot=short&r=json")!
+        // Source: http://www.learnswiftonline.com/mini-tutorials/how-to-download-and-read-json/
+        let requestURL: NSURL = NSURL(string: "https://www.omdbapi.com/?t=" + searchRequest! + "&y=&plot=full&r=json")!
         let urlRequest: NSMutableURLRequest = NSMutableURLRequest(url: requestURL as URL)
         let session = URLSession.shared
         let task = session.dataTask(with: urlRequest as URLRequest) {
@@ -75,31 +73,39 @@ class ViewController: UIViewController {
                 do{
                     let json = try JSONSerialization.jsonObject(with: data!, options: []) as! NSDictionary
                     
-                    // "Response" jason is false wanneer er een foute title wordt ingevoerd :"False"
+                    //
                     if (json["Response"] as? String == "False") {
-                      self.notFound()
+                        return
+                    } else if self.titles.contains((json["Title"] as? String)!) == true{
+                        return
+                    } else {
+                        self.AddMovie(json: json)
+                        self.updateStorage()
+                        self.performSelector(onMainThread: #selector(ViewController.reloadTableView), with: nil, waitUntilDone: true)
                     }
-                    self.AddMovie(json: json)
-                    self.updateStorage()
-                    self.performSelector(onMainThread: #selector(ViewController.reloadTableView), with: nil, waitUntilDone: true)
                 } catch {
                     print ("Error with JSON: \(error)")
                 }
+            } else if (statusCode == 400) {
+                let alertController = UIAlertController(title: "Error 400", message:
+                    "The server cannot or will not process the request due to an apparent client error", preferredStyle: UIAlertControllerStyle.alert)
+                alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default,handler: nil))
+                self.present(alertController, animated: true, completion: nil)
+                return
+                
+            } else {
+                let alertController = UIAlertController(title: "Error", message:
+                    "Unknown error", preferredStyle: UIAlertControllerStyle.alert)
+                alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default,handler: nil))
+                self.present(alertController, animated: true, completion: nil)
+                return
             }
+            
         }
         task.resume()
-        
+        searchData.text = ""
     }
     
-    func notFound() {
-        let alertController = UIAlertController(title: "Movie not found", message:
-            "Sorry, movie is not found!", preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default,handler: nil))
-        
-        self.present(alertController, animated: true, completion: nil)
-    
-        return
-    }
     func AddMovie(json: NSDictionary) {
         self.titles.append((json["Title"] as? String)!)
         self.years.append((json["Year"] as? String)!)
@@ -108,6 +114,7 @@ class ViewController: UIViewController {
         self.banners.append((json["Poster"] as? String)!)
         self.info.append((json["Plot"] as? String)!)
     }
+    
     func reloadTableView() {
         self.tableView.reloadData()
     }
@@ -120,7 +127,6 @@ class ViewController: UIViewController {
         self.storage.set(self.info, forKey: "Plot")
     }
 }
-
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -137,7 +143,11 @@ extension ViewController: UITableViewDataSource {
             let banner = (banners[indexPath.row])
             let urlBanner = NSURL(string: banner)
             let dataBanner = NSData(contentsOf: urlBanner! as URL)
-            cell.movieBanner.image = UIImage(data: dataBanner as! Data)
+            if dataBanner != nil{
+                cell.movieBanner.image = UIImage(data: dataBanner as! Data)
+            } else {
+                cell.movieBanner.image = UIImage(named: "no-image")
+            }
         }
         else {
             cell.movieBanner.image = UIImage(named: "no-image")
@@ -147,33 +157,28 @@ extension ViewController: UITableViewDataSource {
         return cell
     }
     
-//    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-//        return true
-//    }
-    
+    // Deleting a row from the table is not working, Jullian and I doesn't understand why..
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
     func tableView(_tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-//        if editingStyle == UITableViewCellEditingStyle.delete {
-//            
-//            self.titles.remove(at: indexPath.row)
-//            self.years.remove(at: indexPath.row)
-//            self.genres.remove(at: indexPath.row)
-//            self.actors.remove(at: indexPath.row)
-//            self.banners.remove(at: indexPath.row)
-//            self.info.remove(at: indexPath.row)
-//            updateStorage()
-//            self.tableView.reloadData()
-//            
-//            tableView.deleteRows(at: [indexPath], with: .fade)
-//        }
+        if editingStyle == UITableViewCellEditingStyle.delete {
+            
+            self.titles.remove(at: indexPath.row)
+            self.years.remove(at: indexPath.row)
+            self.genres.remove(at: indexPath.row)
+            self.actors.remove(at: indexPath.row)
+            self.banners.remove(at: indexPath.row)
+            self.info.remove(at: indexPath.row)
+            updateStorage()
+            self.tableView.reloadData()
+            
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
     }
 }
 
 extension ViewController: UITableViewDelegate {
-    
-
-    
-
-    
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         currentIndex = indexPath.row
     }

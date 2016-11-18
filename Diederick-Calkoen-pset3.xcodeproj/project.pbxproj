@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E95C64CC1DD9AADA005B3810 /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95C64CB1DD9AADA005B3810 /* CustomCell.swift */; };
-		E9EEDAFB1DDC3CB1008A048F /* CellViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EEDAFA1DDC3CB1008A048F /* CellViewController.swift */; };
+		E9EEDAFB1DDC3CB1008A048F /* singleCellViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EEDAFA1DDC3CB1008A048F /* singleCellViewController.swift */; };
 		E9F18A121DD7819D00A46863 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F18A111DD7819D00A46863 /* AppDelegate.swift */; };
 		E9F18A141DD7819D00A46863 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F18A131DD7819D00A46863 /* ViewController.swift */; };
 		E9F18A171DD7819D00A46863 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9F18A151DD7819D00A46863 /* Main.storyboard */; };
@@ -18,7 +18,7 @@
 
 /* Begin PBXFileReference section */
 		E95C64CB1DD9AADA005B3810 /* CustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
-		E9EEDAFA1DDC3CB1008A048F /* CellViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellViewController.swift; sourceTree = "<group>"; };
+		E9EEDAFA1DDC3CB1008A048F /* singleCellViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = singleCellViewController.swift; sourceTree = "<group>"; };
 		E9F18A0E1DD7819C00A46863 /* Diederick-Calkoen-pset3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Diederick-Calkoen-pset3.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9F18A111DD7819D00A46863 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9F18A131DD7819D00A46863 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -60,7 +60,7 @@
 			children = (
 				E9F18A111DD7819D00A46863 /* AppDelegate.swift */,
 				E9F18A131DD7819D00A46863 /* ViewController.swift */,
-				E9EEDAFA1DDC3CB1008A048F /* CellViewController.swift */,
+				E9EEDAFA1DDC3CB1008A048F /* singleCellViewController.swift */,
 				E95C64CB1DD9AADA005B3810 /* CustomCell.swift */,
 				E9F18A151DD7819D00A46863 /* Main.storyboard */,
 				E9F18A181DD7819D00A46863 /* Assets.xcassets */,
@@ -144,7 +144,7 @@
 			files = (
 				E9F18A141DD7819D00A46863 /* ViewController.swift in Sources */,
 				E95C64CC1DD9AADA005B3810 /* CustomCell.swift in Sources */,
-				E9EEDAFB1DDC3CB1008A048F /* CellViewController.swift in Sources */,
+				E9EEDAFB1DDC3CB1008A048F /* singleCellViewController.swift in Sources */,
 				E9F18A121DD7819D00A46863 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

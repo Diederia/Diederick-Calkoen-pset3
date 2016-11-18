@@ -19,8 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        
 //        if let bundle = Bundle.main.bundleIdentifier {
 //            UserDefaults.standard.removePersistentDomain(forName: bundle)
-//        }
-//        
+//      }
+        
         return true
     }
 
