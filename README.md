@@ -1,4 +1,4 @@
-# h1 pset3 
+# pset3 
 
  * watch list
 
