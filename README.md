@@ -19,7 +19,7 @@
 
 ![alt text] (https://github.com/Diederia/Diederick-Calkoen-pset3/blob/master/Diederick-Calkoen-pset3/Docs/Screen%20Shot%202016-11-18%20at%2022.32.23.png)
 
-* Single cel view landscape modus:
+* Single cell view landscape modus:
 
 ![alt text] (https://github.com/Diederia/Diederick-Calkoen-pset3/blob/master/Diederick-Calkoen-pset3/Docs/Screen%20Shot%202016-11-18%20at%2022.31.55.png)
 
